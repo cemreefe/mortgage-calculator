@@ -64,11 +64,24 @@ function calculateMortgageAmortization(
 
   let totalPaymentsAtEnd;
   let debtAtFixedTermEnd;
+  let totalOverPaid = 0;
+  let prevYear = 0;
 
+  
   // Payment plan 1
   for (let month = 1; month <= totalPayments; month++) {
+
+    let maxOverpaymentPossible;
+    
     if (reduceLifetimeRemainingBalance <= 0) {
       continue;
+    }
+    
+    // Recalculate possible overpayment for new year.
+    let currentYear = month % 12;
+    if (prevYear != currentYear) {
+      prevYear = currentYear;
+      maxOverpaymentPossible = reduceLifetimeRemainingBalance / 10;  
     }
 
     const isPostFixedTerm = month > fixedTermInMonths;
@@ -91,7 +104,13 @@ function calculateMortgageAmortization(
     let debtPayment = planOneMonthlyPayment - interestPayment;
 
     if (shouldAddOverpayment) {
-      reduceLifetimeRemainingBalance -= monthlyExtraPayment;
+      let overpayment = Math.min(monthlyExtraPayment, maxOverpaymentPossible);
+      reduceLifetimeRemainingBalance -= overpayment;
+      maxOverpaymentPossible -= overpayment;
+      totalOverPaid += overpayment;
+    }
+    else {
+      let overpayment = 0
     }
 
     if ((reduceLifetimeRemainingBalance - debtPayment) < 0) {
@@ -104,7 +123,7 @@ function calculateMortgageAmortization(
       month,
       debtPayment,
       interestPayment,
-      extraPayment: month >= extraPaymentStartMonth ? monthlyExtraPayment : 0,
+      extraPayment: month >= extraPaymentStartMonth ? overpayment : 0,
       remainingBalance: reduceLifetimeRemainingBalance,
     });
   }
