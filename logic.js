@@ -105,12 +105,14 @@ function calculateMortgageAmortization(
 
     if (shouldAddOverpayment) {
       let overpayment = Math.min(monthlyExtraPayment, maxOverpaymentPossible);
+      console.log("Max overpayment left for year:", maxOverpaymentPossible);
+      console.log("Monthly extra payment selected:", monthlyExtraPayment);
+      console.log("Max possible overpayment without fees:", overpayment);
       reduceLifetimeRemainingBalance -= overpayment;
       maxOverpaymentPossible -= overpayment;
+      console.log("TotalOverPaid before:", totalOverPaid);
       totalOverPaid += overpayment;
-    }
-    else {
-      let overpayment = 0
+      console.log("TotalOverPaid after:", totalOverPaid);
     }
 
     if ((reduceLifetimeRemainingBalance - debtPayment) < 0) {
