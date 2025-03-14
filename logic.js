@@ -123,7 +123,7 @@ function calculateMortgageAmortization(
       month,
       debtPayment,
       interestPayment,
-      extraPayment: month >= extraPaymentStartMonth ? overpayment : 0,
+      extraPayment: totalOverPaid,
       remainingBalance: reduceLifetimeRemainingBalance,
     });
   }
@@ -155,7 +155,7 @@ function calculateMortgageAmortization(
       month,
       debtPayment,
       interestPayment,
-      extraPayment: totalOverpayment,
+      extraPayment: totalOverPaid,
       remainingBalance: Math.abs(reduceMortgagePaymentsBalance),
     });
   }
